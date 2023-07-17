@@ -1,0 +1,78 @@
+resources:
+  repositories:
+  - repository: termux-packages
+    type: git
+    ref: $(branchToCheckout)
+    name: termux-packages
+pool:
+  vmImage: ubuntu-latest
+parameters:
+- name: PackageToBuild
+  displayName: 'Package to Build (Default: busybox)'
+  type: string
+  default: busybox
+- name: BranchToCheckout
+  displayName: 'termux-packages branch to use'
+  type: string
+  default: master
+- name: Architecture
+  displayName: 'Architecture to Build (Default: aarch64)'
+  type: string
+  default: aarch64
+  values:
+  - all
+  - aarch64
+  - arm
+  - i686
+  - x86_64
+- name: DebugBuild
+  displayName: 'TODO: Debug Build'
+  type: boolean
+  default: false
+- name: DownloadDependencies
+  displayName: 'TODO: Download Prebuilt Dependencies'
+  type: boolean
+  default: false
+variables:
+- name: dockerTermuxPackagesDirectory
+  value: /home/builder/termux-packages
+  readonly: true
+- name: packageOutputDirectory
+  value: $(Build.SourcesDirectory)/output
+  readonly: true
+- name: architecture
+  value: aarch64
+  readonly: false
+- name: packageToBuild
+  value: busybox
+  readonly: false
+- name: branchToCheckout
+  value: master
+  readonly: false
+trigger:
+  enabled: false
+stages:
+- stage: __default
+  jobs:
+  - job: Run_Everything
+    displayName: 'Compiling termux package'
+    continueOnError: false
+    steps:
+    - task: 6d15af64-176c-496d-b583-fd2ae21d4df4@1
+      inputs:
+        repository: termux-packages
+    - task: CmdLine@2
+      displayName: 'Set up the Android SDK/NDK'
+      inputs:
+        script: $(Build.SourcesDirectory)/scripts/run-docker.sh scripts/setup-android-sdk.sh
+    - task: CmdLine@2
+      displayName: 'Building: $(packageToBuild) ($(architecture))'
+      inputs:
+        script: $(Build.SourcesDirectory)/scripts/run-docker.sh ./build-package.sh -a $(architecture) -I $(packageToBuild)
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(packageOutputDirectory)'
+        ArtifactName: '$(packageToBuild) with dependencies'
+        publishLocation: 'Container'
+        StoreAsTar: true
+
