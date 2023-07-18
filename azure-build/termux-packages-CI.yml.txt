@@ -1,9 +1,14 @@
 resources:
   repositories:
-  - repository: termux-packages
-    type: git
-    ref: $(branchToCheckout)
-    name: termux-packages
+  # - repository: termux-packages
+    # type: git
+    # ref: $(branchToCheckout)
+    # name: termux-packages
+  # - repository: termux-packages
+    # type: github
+    # ref: $(branchToCheckout)
+    # name: [YourOrganization]/termux-packages
+    # endpoint: [YourGitHubServiceEndpoint]
 pool:
   vmImage: ubuntu-latest
 parameters:
@@ -37,20 +42,24 @@ variables:
 - name: dockerTermuxPackagesDirectory
   value: /home/builder/termux-packages
   readonly: true
+
 - name: packageOutputDirectory
   value: $(Build.SourcesDirectory)/output
   readonly: true
+
 - name: architecture
-  value: aarch64
+  value: ${{ parameters.Architecture }}
   readonly: false
+
 - name: packageToBuild
-  value: busybox
+  value: ${{ parameters.PackageToBuild }}
   readonly: false
+
 - name: branchToCheckout
-  value: master
+  value: ${{ parameters.BranchToCheckout }}
   readonly: false
-trigger:
-  enabled: false
+
+trigger: none
 stages:
 - stage: __default
   jobs:
@@ -75,4 +84,3 @@ stages:
         ArtifactName: '$(packageToBuild) with dependencies'
         publishLocation: 'Container'
         StoreAsTar: true
-
