@@ -1,0 +1,17 @@
+Diff from https://github.com/iBotPeaches/android_frameworks_base/commit/76fb330762c3d204f9ae45e444e18a2f82535bc0#diff-b98389806434d8a4c79959f525159367a77d0c7c8c06fb43abaf72b071ebe477
+This adds support for the --forced-package-id
+--- a/base/tools/aapt/ResourceTable.cpp
++++ b/base/tools/aapt/ResourceTable.cpp
+@@ -3764,7 +3764,11 @@ sp<ResourceTable::Package> ResourceTable::getPackage(const String16& package)
+                }
+                p = new Package(package, extendedPackageId);
+            } else {
+                p = new Package(package, mNextPackageId);
+                int forcedPackageId = mBundle->getForcedPackageId();
+                if(forcedPackageId != -1)
+                    p = new Package(package, forcedPackageId);
+                else
+                    p = new Package(package, mNextPackageId);
+            }
+        }
+        //printf("*** NEW PACKAGE: \"%s\" id=%d\n",

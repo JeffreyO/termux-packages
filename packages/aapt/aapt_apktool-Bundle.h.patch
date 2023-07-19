@@ -1,0 +1,30 @@
+Diff from https://github.com/iBotPeaches/android_frameworks_base/commit/76fb330762c3d204f9ae45e444e18a2f82535bc0#diff-b98389806434d8a4c79959f525159367a77d0c7c8c06fb43abaf72b071ebe477
+This adds support for the --forced-package-id
+--- a/base/tools/aapt/Bundle.h
++++ b/base/tools/aapt/Bundle.h
+@@ -59,7 +59,7 @@ class Bundle {
+          mAssetSourceDir(NULL), 
+          mCrunchedOutputDir(NULL), mProguardFile(NULL),
+          mAndroidManifestFile(NULL), mPublicOutputFile(NULL),
+          mRClassDir(NULL), mResourceIntermediatesDir(NULL), mManifestMinSdkVersion(NULL),
+          mRClassDir(NULL), mResourceIntermediatesDir(NULL), mForcedPackageId(-1), mManifestMinSdkVersion(NULL),
+          mMinSdkVersion(NULL), mTargetSdkVersion(NULL), mMaxSdkVersion(NULL),
+          mVersionCode(NULL), mVersionName(NULL), mCustomPackage(NULL), mExtraPackages(NULL),
+          mMaxResVersion(NULL), mDebugMode(false), mNonConstantId(false), mProduct(NULL),
+@@ -153,6 +153,8 @@ class Bundle {
+    const android::Vector<const char*>& getNoCompressExtensions() const { return mNoCompressExtensions; }
+    void addNoCompressExtension(const char* ext) { mNoCompressExtensions.add(ext); }
+
+    int getForcedPackageId() const { return mForcedPackageId; }
+    void setForcedPackageId(int val) { mForcedPackageId = val; }
+    const char*  getManifestMinSdkVersion() const { return mManifestMinSdkVersion; }
+    void setManifestMinSdkVersion(const char*  val) { mManifestMinSdkVersion = val; }
+    const char*  getMinSdkVersion() const { return mMinSdkVersion; }
+@@ -278,6 +280,7 @@ class Bundle {
+    android::Vector<const char*> mNoCompressExtensions;
+    android::Vector<const char*> mResourceSourceDirs;
+
+    int mForcedPackageId;
+    const char* mManifestMinSdkVersion;
+    const char* mMinSdkVersion;
+    const char* mTargetSdkVersion;
