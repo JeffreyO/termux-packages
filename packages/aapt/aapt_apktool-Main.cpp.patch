@@ -20,7 +20,7 @@ Adds --forced-package-id option
  
      return 0;
  }
-@@ -284,6 +285,9 @@
+@@ -284,6 +283,9 @@
      /* default to compression */
      bundle.setCompressionMethod(ZipEntry::kCompressDeflated);
  
