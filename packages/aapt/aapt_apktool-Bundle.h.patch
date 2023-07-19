@@ -3,7 +3,7 @@ Changes from M1cha
 Adds --forced-package-id option
 --- a/base/tools/aapt/Bundle.h
 +++ b/base/tools/aapt/Bundle.h
-@@ -58,7 +58,7 @@ public:
+@@ -58,7 +58,7 @@
            mNoVersionTransitions(false),
            mCrunchedOutputDir(NULL), mProguardFile(NULL), mMainDexProguardFile(NULL),
            mAndroidManifestFile(NULL), mPublicOutputFile(NULL),
@@ -12,7 +12,7 @@ Adds --forced-package-id option
            mMinSdkVersion(NULL), mTargetSdkVersion(NULL), mMaxSdkVersion(NULL),
            mVersionCode(NULL), mVersionName(NULL), mReplaceVersion(false), mCustomPackage(NULL),
            mExtraPackages(NULL), mMaxResVersion(NULL), mDebugMode(false), mNonConstantId(false),
-@@ -176,6 +176,8 @@ public:
+@@ -176,6 +176,8 @@
      void addJarFile(const char* file) { mJarFiles.add(file); }
      const android::Vector<const char*>& getNoCompressExtensions() const { return mNoCompressExtensions; }
      void addNoCompressExtension(const char* ext) { mNoCompressExtensions.add(ext); }
@@ -21,7 +21,7 @@ Adds --forced-package-id option
      void setFeatureOfPackage(const char* str) { mFeatureOfPackage = str; }
      const android::String8& getFeatureOfPackage() const { return mFeatureOfPackage; }
      void setFeatureAfterPackage(const char* str) { mFeatureAfterPackage = str; }
-@@ -327,6 +329,8 @@ private:
+@@ -327,6 +329,8 @@
      android::String8 mFeatureOfPackage;
      android::String8 mFeatureAfterPackage;
      android::String8 mRevisionCode;

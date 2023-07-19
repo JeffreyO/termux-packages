@@ -11,7 +11,7 @@ Adds --forced-package-id option
  #include <utils/Compat.h>
  #include <utils/Log.h>
  #include <utils/threads.h>
-@@ -29,7 +28,7 @@ int doVersion(Bundle* bundle)
+@@ -29,7 +28,7 @@
      if (bundle->getFileSpecCount() != 0) {
          printf("(ignoring extra arguments)\n");
      }
@@ -20,7 +20,7 @@ Adds --forced-package-id option
  
      return 0;
  }
-@@ -73,7 +72,7 @@ void usage(void)
+@@ -73,7 +72,7 @@
      fprintf(stderr,
          " %s p[ackage] [-d][-f][-m][-u][-v][-x][-z][-M AndroidManifest.xml] \\\n"
          "        [-0 extension [-0 extension ...]] [-g tolerance] [-j jarfile] \\\n"
@@ -29,7 +29,7 @@ Adds --forced-package-id option
          "        [--app-version VAL] [--app-version-name TEXT] [--custom-package VAL] \\\n"
          "        [--rename-manifest-package PACKAGE] \\\n"
          "        [--rename-instrumentation-target-package PACKAGE] \\\n"
-@@ -149,6 +148,8 @@ void usage(void)
+@@ -149,6 +148,8 @@
          "   --debug-mode\n"
          "       inserts android:debuggable=\"true\" in to the application node of the\n"
          "       manifest, making the application debuggable even on production devices.\n"
@@ -38,7 +38,7 @@ Adds --forced-package-id option
          "   --include-meta-data\n"
          "       when used with \"dump badging\" also includes meta-data tags.\n"
          "   --pseudo-localize\n"
-@@ -284,6 +285,9 @@ int main(int argc, char* const argv[])
+@@ -284,6 +285,9 @@
      /* default to compression */
      bundle.setCompressionMethod(ZipEntry::kCompressDeflated);
  
@@ -48,7 +48,7 @@ Adds --forced-package-id option
      if (argc < 2) {
          wantUsage = true;
          goto bail;
-@@ -535,6 +539,21 @@ int main(int argc, char* const argv[])
+@@ -535,6 +539,21 @@
              case '-':
                  if (strcmp(cp, "-debug-mode") == 0) {
                      bundle.setDebugMode(true);
