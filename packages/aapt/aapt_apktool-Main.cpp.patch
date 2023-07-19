@@ -1,44 +1,72 @@
-Diff from https://github.com/iBotPeaches/android_frameworks_base/commit/76fb330762c3d204f9ae45e444e18a2f82535bc0#diff-b98389806434d8a4c79959f525159367a77d0c7c8c06fb43abaf72b071ebe477
-This adds support for the --forced-package-id
+Diff from: https://github.com/iBotPeaches/android_frameworks_base/commit/76fb330762c3d204f9ae45e444e18a2f82535bc0#diff-06f47ed62f5027bdc87b166693d9cdc899318a9e418f2d29ada8bf0693fcf50e
+Changes combined from M1cha and aapt-Main.patch
+Adds --forced-package-id option
 --- a/base/tools/aapt/Main.cpp
 +++ b/base/tools/aapt/Main.cpp
-@@ -59,7 +59,7 @@ void usage(void)
-    fprintf(stderr,
-        " %s p[ackage] [-d][-f][-m][-u][-v][-x[ extending-resource-id]][-z][-M AndroidManifest.xml] \\\n"
-        "        [-0 extension [-0 extension ...]] [-g tolerance] [-j jarfile] \\\n"
-        "        [--debug-mode] [--min-sdk-version VAL] [--target-sdk-version VAL] \\\n"
-        "        [--debug-mode] [--forced-package-id VAL] [--min-sdk-version VAL] [--target-sdk-version VAL] \\\n"
-        "        [--app-version VAL] [--app-version-name TEXT] [--custom-package VAL] \\\n"
-        "        [--rename-manifest-package PACKAGE] \\\n"
-        "        [--rename-instrumentation-target-package PACKAGE] \\\n"
-@@ -139,6 +139,8 @@ void usage(void)
-        "   --debug-mode\n"
-        "       inserts android:debuggable=\"true\" in to the application node of the\n"
-        "       manifest, making the application debuggable even on production devices.\n"
-        "   --forced-package-id\n"
-        "       forces value as package-id\n"
-        "   --min-sdk-version\n"
-        "       inserts android:minSdkVersion in to manifest.  If the version is 7 or\n"
-        "       higher, the default encoding for resources will be in UTF-8.\n"
-@@ -483,6 +485,21 @@ int main(int argc, char* const argv[])
-            case '-':
-                if (strcmp(cp, "-debug-mode") == 0) {
-                    bundle.setDebugMode(true);
-                } else if (strcmp(cp, "-forced-package-id") == 0) {
-                    argc--;
-                    argv++;
-                    if (!argc) {
-                        fprintf(stderr, "ERROR: No argument supplied for '--forced-package-id' option\n");
-                        wantUsage = true;
-                        goto bail;
-                    }
-                    if (!isdigit(argv[0][0])) {
-                        fprintf(stderr, "ERROR: Invalid argument supplied for '--forced-package-id' option\n");
-                        wantUsage = true;
-                        goto bail;
-                    } else {
-                        bundle.setForcedPackageId(atoi(argv[0]));
-                    }
-                } else if (strcmp(cp, "-min-sdk-version") == 0) {
-                    argc--;
-                    argv++;
+@@ -6,7 +6,6 @@
+ #include "Main.h"
+ #include "Bundle.h"
+ 
+-#include <build/version.h>
+ #include <utils/Compat.h>
+ #include <utils/Log.h>
+ #include <utils/threads.h>
+@@ -29,7 +28,7 @@ int doVersion(Bundle* bundle)
+     if (bundle->getFileSpecCount() != 0) {
+         printf("(ignoring extra arguments)\n");
+     }
+-    printf("Android Asset Packaging Tool, v0.2-%s\n", android::build::GetBuildNumber().c_str());
++    printf("Android Asset Packaging Tool, v0.2\n");
+ 
+     return 0;
+ }
+@@ -73,7 +72,7 @@ void usage(void)
+     fprintf(stderr,
+         " %s p[ackage] [-d][-f][-m][-u][-v][-x][-z][-M AndroidManifest.xml] \\\n"
+         "        [-0 extension [-0 extension ...]] [-g tolerance] [-j jarfile] \\\n"
+-        "        [--debug-mode] [--min-sdk-version VAL] [--target-sdk-version VAL] \\\n"
++        "        [--debug-mode] [--forced-package-id VAL] [--min-sdk-version VAL] [--target-sdk-version VAL] \\\n"
+         "        [--app-version VAL] [--app-version-name TEXT] [--custom-package VAL] \\\n"
+         "        [--rename-manifest-package PACKAGE] \\\n"
+         "        [--rename-instrumentation-target-package PACKAGE] \\\n"
+@@ -149,6 +148,8 @@ void usage(void)
+         "   --debug-mode\n"
+         "       inserts android:debuggable=\"true\" in to the application node of the\n"
+         "       manifest, making the application debuggable even on production devices.\n"
++        "   --forced-package-id\n"
++        "       forces value as package-id\n"
+         "   --include-meta-data\n"
+         "       when used with \"dump badging\" also includes meta-data tags.\n"
+         "   --pseudo-localize\n"
+@@ -284,6 +285,9 @@ int main(int argc, char* const argv[])
+     /* default to compression */
+     bundle.setCompressionMethod(ZipEntry::kCompressDeflated);
+ 
++    // Convenience when using aapt in termux.
+++    bundle.addPackageInclude("@TERMUX_PREFIX@/share/aapt/android.jar");
++
+     if (argc < 2) {
+         wantUsage = true;
+         goto bail;
+@@ -535,6 +539,21 @@ int main(int argc, char* const argv[])
+             case '-':
+                 if (strcmp(cp, "-debug-mode") == 0) {
+                     bundle.setDebugMode(true);
++                } else if (strcmp(cp, "-forced-package-id") == 0) {
++                    argc--;
++                    argv++;
++                    if (!argc) {
++                        fprintf(stderr, "ERROR: No argument supplied for '--forced-package-id' option\n");
++                        wantUsage = true;
++                        goto bail;
++                    }
++                    if (!isdigit(argv[0][0])) {
++                        fprintf(stderr, "ERROR: Invalid argument supplied for '--forced-package-id' option\n");
++                        wantUsage = true;
++                        goto bail;
++                    } else {
++                        bundle.setForcedPackageId(atoi(argv[0]));
++                    }
+                 } else if (strcmp(cp, "-min-sdk-version") == 0) {
+                     argc--;
+                     argv++;

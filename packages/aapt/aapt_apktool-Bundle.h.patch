@@ -1,30 +1,32 @@
-Diff from https://github.com/iBotPeaches/android_frameworks_base/commit/76fb330762c3d204f9ae45e444e18a2f82535bc0#diff-b98389806434d8a4c79959f525159367a77d0c7c8c06fb43abaf72b071ebe477
-This adds support for the --forced-package-id
+Diff from: https://github.com/iBotPeaches/android_frameworks_base/commit/76fb330762c3d204f9ae45e444e18a2f82535bc0#diff-b98389806434d8a4c79959f525159367a77d0c7c8c06fb43abaf72b071ebe477
+Changes from M1cha
+Adds --forced-package-id option
 --- a/base/tools/aapt/Bundle.h
 +++ b/base/tools/aapt/Bundle.h
-@@ -59,7 +59,7 @@ class Bundle {
-          mAssetSourceDir(NULL), 
-          mCrunchedOutputDir(NULL), mProguardFile(NULL),
-          mAndroidManifestFile(NULL), mPublicOutputFile(NULL),
-          mRClassDir(NULL), mResourceIntermediatesDir(NULL), mManifestMinSdkVersion(NULL),
-          mRClassDir(NULL), mResourceIntermediatesDir(NULL), mForcedPackageId(-1), mManifestMinSdkVersion(NULL),
-          mMinSdkVersion(NULL), mTargetSdkVersion(NULL), mMaxSdkVersion(NULL),
-          mVersionCode(NULL), mVersionName(NULL), mCustomPackage(NULL), mExtraPackages(NULL),
-          mMaxResVersion(NULL), mDebugMode(false), mNonConstantId(false), mProduct(NULL),
-@@ -153,6 +153,8 @@ class Bundle {
-    const android::Vector<const char*>& getNoCompressExtensions() const { return mNoCompressExtensions; }
-    void addNoCompressExtension(const char* ext) { mNoCompressExtensions.add(ext); }
-
-    int getForcedPackageId() const { return mForcedPackageId; }
-    void setForcedPackageId(int val) { mForcedPackageId = val; }
-    const char*  getManifestMinSdkVersion() const { return mManifestMinSdkVersion; }
-    void setManifestMinSdkVersion(const char*  val) { mManifestMinSdkVersion = val; }
-    const char*  getMinSdkVersion() const { return mMinSdkVersion; }
-@@ -278,6 +280,7 @@ class Bundle {
-    android::Vector<const char*> mNoCompressExtensions;
-    android::Vector<const char*> mResourceSourceDirs;
-
-    int mForcedPackageId;
-    const char* mManifestMinSdkVersion;
-    const char* mMinSdkVersion;
-    const char* mTargetSdkVersion;
+@@ -58,7 +58,7 @@ public:
+           mNoVersionTransitions(false),
+           mCrunchedOutputDir(NULL), mProguardFile(NULL), mMainDexProguardFile(NULL),
+           mAndroidManifestFile(NULL), mPublicOutputFile(NULL),
+-          mRClassDir(NULL), mResourceIntermediatesDir(NULL), mManifestMinSdkVersion(NULL),
++          mRClassDir(NULL), mResourceIntermediatesDir(NULL), mForcedPackageId(-1), mManifestMinSdkVersion(NULL),
+           mMinSdkVersion(NULL), mTargetSdkVersion(NULL), mMaxSdkVersion(NULL),
+           mVersionCode(NULL), mVersionName(NULL), mReplaceVersion(false), mCustomPackage(NULL),
+           mExtraPackages(NULL), mMaxResVersion(NULL), mDebugMode(false), mNonConstantId(false),
+@@ -176,6 +176,8 @@ public:
+     void addJarFile(const char* file) { mJarFiles.add(file); }
+     const android::Vector<const char*>& getNoCompressExtensions() const { return mNoCompressExtensions; }
+     void addNoCompressExtension(const char* ext) { mNoCompressExtensions.add(ext); }
++    int getForcedPackageId() const { return mForcedPackageId; }
++    void setForcedPackageId(int val) { mForcedPackageId = val; }
+     void setFeatureOfPackage(const char* str) { mFeatureOfPackage = str; }
+     const android::String8& getFeatureOfPackage() const { return mFeatureOfPackage; }
+     void setFeatureAfterPackage(const char* str) { mFeatureAfterPackage = str; }
+@@ -327,6 +329,8 @@ private:
+     android::String8 mFeatureOfPackage;
+     android::String8 mFeatureAfterPackage;
+     android::String8 mRevisionCode;
++    
++    int mForcedPackageId;
+     const char* mManifestMinSdkVersion;
+     const char* mMinSdkVersion;
+     const char* mTargetSdkVersion;
